@@ -11,7 +11,53 @@ function UseStateHook({ name }) {
     confirmed: false,
   });
 
-  console.log(state.value);
+  const onConfirm = () => {
+    setState({
+      ...state,
+      error: false,
+      loading: false,
+      confirmed: true,
+    });
+  };
+
+  const onError = () => {
+    setState({
+      ...state,
+      loading: false,
+      error: true,
+    });
+  };
+
+  const onWrite = (newValue) => {
+    setState({
+      ...state,
+      value: newValue,
+    });
+  };
+
+  const onCheck = () => {
+    setState({
+      ...state,
+      loading: true,
+    });
+  };
+
+  const onDelete = () => {
+    setState({
+      ...state,
+      deleted: true,
+      value: "",
+    });
+  };
+
+  const onReset = () => {
+    setState({
+      ...state,
+      confirmed: false,
+      deleted: false,
+      value: "",
+    });
+  };
 
   React.useEffect(() => {
     console.log("Empezando el efecto");
@@ -21,17 +67,9 @@ function UseStateHook({ name }) {
         console.log("Haciendo la validación");
 
         if (state.value === SECURITY_CODE) {
-          setState({
-            ...state,
-            loading: false,
-            confirmed: true,
-          });
+          onConfirm();
         } else {
-          setState({
-            ...state,
-            loading: false,
-            error: true,
-          });
+          onError();
         }
 
         console.log("Terminando la validación");
@@ -55,20 +93,12 @@ function UseStateHook({ name }) {
           value={state.value}
           placeholder="Código de seguridad"
           onChange={(event) => {
-            setState({
-              ...state,
-              value: event.target.value,
-            });
+            onWrite(event.target.value);
           }}
         />
         <button
           onClick={() => {
-            setState({
-              ...state,
-              loading: true,
-              error: false,
-              value: "",
-            });
+            onCheck();
           }}
         >
           Comprobar
@@ -83,22 +113,14 @@ function UseStateHook({ name }) {
         <p>¿Seguro que quieres eliminar UseState?</p>
         <button
           onClick={() => {
-            setState({
-              ...state,
-              deleted: true,
-              value: "",
-            });
+            onDelete();
           }}
         >
           SI, eliminar
         </button>
         <button
           onClick={() => {
-            setState({
-              ...state,
-              confirmed: false,
-              value: "",
-            });
+            onReset();
           }}
         >
           NO, regresar
@@ -113,12 +135,7 @@ function UseStateHook({ name }) {
         <p>SE HA ELIMINADO CORRECTAMENTE</p>
         <button
           onClick={() => {
-            setState({
-              ...state,
-              confirmed: false,
-              deleted: false,
-              value: "",
-            });
+            onReset();
           }}
         >
           Recuperar {name}
