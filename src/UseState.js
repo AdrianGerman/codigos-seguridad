@@ -28,23 +28,33 @@ function UseState({ name }) {
     }
 
     console.log("Terminando el efecto");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   return (
     <div>
       <h2>Eliminar {name}</h2>
       <p>Por favor, escribe el código de seguridad</p>
-      {error && <p>Error: el código es incorrecto</p>}
+
+      {error && !loading && <p>Error: el código es incorrecto</p>}
       {loading && <p>Cargando...</p>}
 
       <input
         value={value}
         placeholder="Código de seguridad"
         onChange={(event) => {
+          // setError(false); Por si quieres que se borre el estado cuando comienzas a escribir en el input
           setValue(event.target.value);
         }}
       />
-      <button onClick={() => setLoading(true)}>Comprobar</button>
+      <button
+        onClick={() => {
+          setError(false);
+          setLoading(true);
+        }}
+      >
+        Comprobar
+      </button>
     </div>
   );
 }
